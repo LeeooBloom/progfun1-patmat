@@ -27,7 +27,7 @@ object Huffman {
 
   // Part 1: Basics
   def weight(tree: CodeTree): Int = tree match {
-    case  Fork(left, right, chars, weight) => weight
+    case Fork(left, right, chars, weight) => weight
     case Leaf(char, weight) => weight
   }
 
@@ -85,7 +85,8 @@ object Huffman {
     * head of the list should have the smallest weight), where the weight
     * of a leaf is the frequency of the character.
     */
-  def makeOrderedLeafList(freqs: List[(Char, Int)]): List[Leaf] = ???
+  def makeOrderedLeafList(freqs: List[(Char, Int)]): List[Leaf] = freqs.map(e => Leaf(e._1, e._2)).sortBy(_.weight)
+
 
   /**
     * Checks whether the list `trees` contains only one single code tree.
@@ -104,7 +105,17 @@ object Huffman {
     * If `trees` is a list of less than two elements, that list should be returned
     * unchanged.
     */
-  def combine(trees: List[CodeTree]): List[CodeTree] = ???
+  def combine(trees: List[CodeTree]): List[CodeTree] = trees match {
+    case (x: Leaf) :: (xs: List[Leaf]) => {
+      if (xs.size < 1) xs
+      else xs.map(e => {
+        if (xs.indexOf(e) == 0)
+          Fork(x, e, List(x.char, e.char), x.weight + e.weight)
+        else e
+      })
+    }
+    case _ => Nil;
+  }
 
   /**
     * This function will be called in the following way:
@@ -153,7 +164,7 @@ object Huffman {
 
   /**
     * What does the secret message say? Can you decode it?
-    * For the decoding use the `frenchCode' Huffman tree defined above.
+    * For the decoding use the 'frenchCode' Huffman tree defined above.
     **/
   val secret: List[Bit] = List(0, 0, 1, 1, 1, 0, 1, 0, 1, 1, 1, 0, 0, 1, 1, 0, 1, 0, 0, 1, 1, 0, 1, 0, 1, 1, 0, 0, 1, 1, 1, 1, 1, 0, 1, 0, 1, 1, 0, 0, 0, 0, 1, 0, 1, 1, 1, 0, 0, 1, 0, 0, 1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 1)
 
